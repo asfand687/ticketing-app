@@ -2,10 +2,12 @@
 import { useRouter } from "next/navigation"
 import { ChangeEvent, SyntheticEvent, useState } from "react"
 
-const TicketForm = () => {
+const TicketForm = ({ ticket }: { ticket: Record<string, any> }) => {
+
+  const EDIT_MODE = ticket._id === "new" ? false : true
 
   const router = useRouter()
-  const startingTicketData: Record<string, string | number> = {
+  let startingTicketData: Record<string, string | number> = {
     title: "",
     description: "",
     priority: 1,
@@ -13,6 +15,18 @@ const TicketForm = () => {
     status: "not started",
     category: "Hardware Problem"
   }
+
+  if(EDIT_MODE) {
+
+    startingTicketData["title"] = ticket.title
+    startingTicketData["description"] = ticket.description
+    startingTicketData["priority"] = ticket.priority
+    startingTicketData["progress"] = ticket.progress
+    startingTicketData["status"] = ticket.status
+    startingTicketData["category"] = ticket.category
+  }
+
+  const [formData, setFormData] = useState(startingTicketData)
 
   const handleChange = (
     e: ChangeEvent<
@@ -32,25 +46,43 @@ const TicketForm = () => {
 
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault()
-    const res = await fetch("/api/Tickets", {
+    if(EDIT_MODE) {
 
-      body: JSON.stringify({formData}),
-      headers: {
-        "content-type": "application/json"
-      },
-      method: "POST",
-    })
+      const res = await fetch(`/api/Tickets/${ticket._id}`, {
 
-    if(!res.ok) {
+        body: JSON.stringify({ formData }),
+        headers: {
+          "content-type": "application/json"
+        },
+        method: "PUT",
+      })
 
-      console.error("Failed to Create Ticket")
+      if(!res.ok) {
+
+        console.error("Failed to Update Ticket")
+      }
+
+    } else {
+
+      const res = await fetch("/api/Tickets", {
+
+        body: JSON.stringify({formData}),
+        headers: {
+          "content-type": "application/json"
+        },
+        method: "POST",
+      })
+
+      if(!res.ok) {
+
+        console.error("Failed to Create Ticket")
+      }
     }
 
     router.refresh()
     router.push("/")
   }
 
-  const [formData, setFormData] = useState(startingTicketData)
   return (
     <div className="w-full flex justify-center">
       <form
@@ -58,7 +90,7 @@ const TicketForm = () => {
         method="POST"
         onSubmit={handleSubmit}
       >
-        <h3>Create Your Ticket</h3>
+        <h3>{ EDIT_MODE ? "Update Your Ticket" : "Create Your Ticket" }</h3>
         <label>Title</label>
         <input
           id="title"
@@ -167,7 +199,7 @@ const TicketForm = () => {
         <input
           type="submit"
           className="btn"
-          value="Create Ticket"
+          value={ EDIT_MODE ? "Update Ticket" : "Create Ticket" }
         />
       </form>
     </div>
