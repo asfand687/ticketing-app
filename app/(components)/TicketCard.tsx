@@ -1,3 +1,4 @@
+import Link from "next/link"
 import Ticket from "../(models)/ticket"
 import DeleteBlock from "./DeleteBlock"
 import PriorityDisplay from "./PriorityDisplay"
@@ -34,27 +35,27 @@ const TicketCard = ({ createdAt, description, id, priority, progress, status, ti
         <DeleteBlock id={id as string}/>
       </div>
 
-      <h4>{ title }</h4>
-      <hr className="h-px border-0 bg-page mb-2"/>
-      <p className="whitespace-pre-wrap">
-        { description }
-      </p>
-      <div className="flex-grow"></div>
-
-      <div className="flex justify-between mt-2">
-        <div>
-          <p className="my-1">
-            { formatTimestamp(createdAt as string) }
-          </p>
-          <ProgressDisplay progress={progress as number}/>
+      <Link className="contents" href={`/TicketPage/${id}`}>
+        <h4>{ title }</h4>
+        <hr className="h-px border-0 bg-page mb-2"/>
+        <p className="whitespace-pre-wrap">
+          { description }
+        </p>
+        <div className="flex-grow"></div>
+        <div className="flex justify-between mt-2">
+          <div>
+            <p className="my-1">
+              { formatTimestamp(createdAt as string) }
+            </p>
+            <ProgressDisplay progress={progress as number}/>
+          </div>
+          <div>
+            <StatusDisplay
+              status={status as string}
+            />
+          </div>
         </div>
-
-        <div>
-          <StatusDisplay 
-            status={status as string}
-          />
-        </div>
-      </div>
+      </Link>
     </div>
   )
 }
