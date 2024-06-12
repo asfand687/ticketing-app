@@ -1,5 +1,5 @@
 import Ticket from "@/app/(models)/ticket";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 // Define a generic type for params
 type Params<T> = {
@@ -11,8 +11,8 @@ type DeleteParams = {
   id: string;
 };
 
-export async function DELETE<T extends DeleteParams>({ params }: Params<T>) {
-
+export async function DELETE<T extends DeleteParams>(req: NextRequest, { params }: Params<T>) {
+ 
   try {
 
     const { id } = params
@@ -20,6 +20,7 @@ export async function DELETE<T extends DeleteParams>({ params }: Params<T>) {
 
     return NextResponse.json({ message: "Ticket Deleted" }, { status: 200 })
   } catch (error) {
+    
     console.error(error)
     return NextResponse.json({ message: "Error", error}, { status: 500 })
   }
