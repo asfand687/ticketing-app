@@ -39,6 +39,7 @@ export default async function Dashboard() {
                         key={ticket._id}
                         createdAt={ticket.createdAt}
                         description={ticket.description}
+                        id={ticket._id}
                         priority={ticket.priority}
                         progress={ticket.progress}
                         status={ticket.status}
