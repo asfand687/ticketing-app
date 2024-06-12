@@ -4,8 +4,8 @@ import PriorityDisplay from "./PriorityDisplay"
 import ProgressDisplay from "./ProgressDisplay"
 import StatusDisplay from "./StatusDisplay"
 
-const TicketCard = ({ createdAt, description, priority, progress, status, title  }: {
-  createdAt?: string; description?: string; priority?: number; progress?: number; status?: string; title: string;
+const TicketCard = ({ createdAt, description, id, priority, progress, status, title  }: {
+  createdAt?: string; description?: string; id?: string; priority?: number; progress?: number; status?: string; title: string;
 }) => {
   
   const formatTimestamp = ((timestamp: string) => {
@@ -31,7 +31,7 @@ const TicketCard = ({ createdAt, description, priority, progress, status, title 
         <PriorityDisplay
           priority={priority as number}
         />
-        <DeleteBlock />
+        <DeleteBlock id={id as string}/>
       </div>
 
       <h4>{ title }</h4>
